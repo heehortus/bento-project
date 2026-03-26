@@ -23,6 +23,18 @@ async function createImage(url: string): Promise<HTMLImageElement> {
   });
 }
 
+function toRad(deg: number) {
+  return (deg * Math.PI) / 180;
+}
+
+function rotateSize(width: number, height: number, rotation: number) {
+  const rad = toRad(rotation);
+  return {
+    width: Math.abs(Math.cos(rad) * width) + Math.abs(Math.sin(rad) * height),
+    height: Math.abs(Math.sin(rad) * width) + Math.abs(Math.cos(rad) * height),
+  };
+}
+
 async function getCroppedImg(
   imageSrc: string,
   pixelCrop: Area,
@@ -30,35 +42,37 @@ async function getCroppedImg(
   fileName: string
 ): Promise<File> {
   const image = await createImage(imageSrc);
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d")!;
 
-  const maxSize = Math.max(image.width, image.height);
-  const safeArea = 2 * ((maxSize / 2) * Math.sqrt(2));
+  // 1단계: 회전된 이미지의 실제 경계 박스 크기로 캔버스 생성
+  const { width: bw, height: bh } = rotateSize(image.width, image.height, rotation);
+  const rotCanvas = document.createElement("canvas");
+  rotCanvas.width = bw;
+  rotCanvas.height = bh;
+  const rotCtx = rotCanvas.getContext("2d")!;
 
-  canvas.width = safeArea;
-  canvas.height = safeArea;
+  rotCtx.translate(bw / 2, bh / 2);
+  rotCtx.rotate(toRad(rotation));
+  rotCtx.translate(-image.width / 2, -image.height / 2);
+  rotCtx.drawImage(image, 0, 0);
 
-  ctx.translate(safeArea / 2, safeArea / 2);
-  ctx.rotate((rotation * Math.PI) / 180);
-  ctx.translate(-image.width / 2, -image.height / 2);
-  ctx.drawImage(image, 0, 0);
+  // 2단계: croppedAreaPixels 영역만 잘라내어 최종 캔버스에 복사
+  const cropCanvas = document.createElement("canvas");
+  cropCanvas.width = pixelCrop.width;
+  cropCanvas.height = pixelCrop.height;
+  const cropCtx = cropCanvas.getContext("2d")!;
 
-  const data = ctx.getImageData(0, 0, safeArea, safeArea);
-
-  canvas.width = pixelCrop.width;
-  canvas.height = pixelCrop.height;
-
-  ctx.putImageData(
-    data,
-    Math.round(0 - safeArea / 2 + image.width / 2 - pixelCrop.x),
-    Math.round(0 - safeArea / 2 + image.height / 2 - pixelCrop.y)
+  cropCtx.drawImage(
+    rotCanvas,
+    pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height,
+    0, 0, pixelCrop.width, pixelCrop.height
   );
 
   return new Promise((resolve) => {
-    canvas.toBlob((blob) => {
-      resolve(new File([blob!], fileName, { type: "image/jpeg" }));
-    }, "image/jpeg", 0.95);
+    cropCanvas.toBlob(
+      (blob) => resolve(new File([blob!], fileName, { type: "image/jpeg" })),
+      "image/jpeg",
+      0.95
+    );
   });
 }
 
@@ -93,11 +107,11 @@ export default function CropEditor({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.18 }}
-      className="fixed inset-0 z-50 flex flex-col bg-[#181818]"
+      className="fixed inset-0 z-50 flex flex-col bg-background"
     >
       {/* 상단 타이틀 */}
       <div className="flex items-center justify-center px-5 py-4 shrink-0">
-        <span className="font-sans text-[16px] font-semibold text-white">이미지 편집</span>
+        <span className="font-sans text-[16px] font-semibold text-foreground">이미지 편집</span>
       </div>
 
       {/* 크롭 영역 */}
@@ -107,11 +121,12 @@ export default function CropEditor({
           crop={crop}
           zoom={zoom}
           rotation={rotation}
+          aspect={4 / 3}
           onCropChange={setCrop}
           onZoomChange={setZoom}
           onCropComplete={onCropComplete}
           style={{
-            containerStyle: { background: "#181818" },
+            containerStyle: { background: "var(--background)" },
             cropAreaStyle: { borderColor: "#7fffd4" },
           }}
         />
@@ -124,14 +139,14 @@ export default function CropEditor({
           <button
             type="button"
             onClick={() => handleRotate(-90)}
-            className="flex items-center gap-1 font-sans text-[14px] font-medium text-white cursor-pointer"
+            className="flex items-center gap-1 font-sans text-[14px] font-medium text-foreground cursor-pointer"
           >
             <span className="text-[18px]">↺</span> 왼쪽 회전
           </button>
           <button
             type="button"
             onClick={() => handleRotate(90)}
-            className="flex items-center gap-1 font-sans text-[14px] font-medium text-white cursor-pointer"
+            className="flex items-center gap-1 font-sans text-[14px] font-medium text-foreground cursor-pointer"
           >
             오른쪽 회전 <span className="text-[18px]">↻</span>
           </button>
