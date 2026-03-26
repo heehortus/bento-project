@@ -22,7 +22,7 @@ export default function Logo({ variant = "LogoOnlyIcon" }: LogoProps) {
     <div className="flex items-center gap-2">
       {icon}
       <span className="font-serif text-[20px] leading-6 text-foreground whitespace-nowrap">
-        bento
+        dosirak
       </span>
     </div>
   );
