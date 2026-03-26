@@ -1,8 +1,11 @@
+import CalendarBadge from "@/components/CalendarBadge";
+
 interface CalendarDayProps {
   date: number;
   active?: boolean;
   focus?: boolean;
   imageUrl?: string;
+  count?: number;
   onClick?: () => void;
 }
 
@@ -11,6 +14,7 @@ export default function CalendarDay({
   active = false,
   focus = false,
   imageUrl,
+  count,
   onClick,
 }: CalendarDayProps) {
   const borderClass = focus ? "border border-positive" : "";
@@ -33,6 +37,12 @@ export default function CalendarDay({
         <span className="font-sans text-[18px] font-semibold leading-[1.4] tracking-[-0.36px] text-[#dddddd] whitespace-nowrap">
           {date}
         </span>
+      )}
+
+      {active && count !== undefined && count > 1 && (
+        <div className="absolute top-[4px] right-[4px]">
+          <CalendarBadge count={count} />
+        </div>
       )}
     </button>
   );

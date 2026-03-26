@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { AnimatePresence } from "framer-motion";
 import Logo from "@/components/Logo";
 import Button from "@/components/Button";
 import DropdownMenu from "@/components/DropdownMenu";
@@ -33,21 +35,37 @@ export default function TopNavigation({ onBentoSubmit }: TopNavigationProps) {
     <>
       <header className="bg-white border-b border-[#ddd] relative">
         <div className="flex items-center justify-between px-5 py-[18px]">
-          <Logo variant="LogoWithLabel" />
+          <Link href="/">
+            <Logo variant="LogoWithLabel" />
+          </Link>
 
           {/* 데스크탑 네비게이션 */}
-          <nav className="hidden md:flex items-center gap-6" aria-label="주요 메뉴">
+          <nav
+            className="hidden md:flex items-center gap-6"
+            aria-label="주요 메뉴"
+          >
             <div className="px-1 py-2">
-              <span className="font-sans text-[14px] font-medium leading-[14px] tracking-[-0.28px] text-foreground">
+              <Link
+                href="/"
+                className="font-sans text-[14px] font-medium leading-[14px] tracking-[-0.28px] text-foreground"
+              >
                 도시락
-              </span>
+              </Link>
             </div>
             <div className="px-1 py-2">
-              <span className="font-sans text-[14px] font-medium leading-[14px] tracking-[-0.28px] text-foreground">
+              <Link
+                href="/calendar"
+                className="font-sans text-[14px] font-medium leading-[14px] tracking-[-0.28px] text-foreground"
+              >
                 기록
-              </span>
+              </Link>
             </div>
-            <Button variant="solid" size="small" label="도시락 만들기" onClick={openDialog} />
+            <Button
+              variant="solid"
+              size="small"
+              label="도시락 만들기"
+              onClick={openDialog}
+            />
           </nav>
 
           {/* 모바일 햄버거 버튼 */}
@@ -58,16 +76,28 @@ export default function TopNavigation({ onBentoSubmit }: TopNavigationProps) {
             aria-expanded={isMenuOpen}
             onClick={() => setIsMenuOpen((prev) => !prev)}
           >
-            <Image src={MenuIconSrc} alt="" aria-hidden="true" width={24} height={24} unoptimized />
+            <Image
+              src={MenuIconSrc}
+              alt=""
+              aria-hidden="true"
+              width={24}
+              height={24}
+              unoptimized
+            />
           </button>
         </div>
 
         {/* 모바일 드롭다운 */}
-        {isMenuOpen && (
-          <div className="absolute top-full left-0 w-full md:hidden z-50">
-            <DropdownMenu onOpenDialog={openDialog} />
-          </div>
-        )}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <div className="absolute top-full left-0 w-full md:hidden z-50">
+              <DropdownMenu
+                onOpenDialog={openDialog}
+                onClose={() => setIsMenuOpen(false)}
+              />
+            </div>
+          )}
+        </AnimatePresence>
       </header>
 
       <Dialog

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import TopNavigation from "@/components/TopNavigation";
 import Button from "@/components/Button";
@@ -32,7 +32,15 @@ interface DialogFormData {
 export default function BentoDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const id = params.id as string;
+
+  const siblings = searchParams.get("siblings")?.split(",").filter(Boolean) ?? [];
+  const siblingIndex = siblings.indexOf(id);
+  const hasSiblings = siblings.length > 1;
+  const prevId = siblingIndex > 0 ? siblings[siblingIndex - 1] : null;
+  const nextId = siblingIndex < siblings.length - 1 ? siblings[siblingIndex + 1] : null;
+  const siblingsParam = hasSiblings ? `?siblings=${siblings.join(",")}` : "";
 
   const { user } = useAuth();
   const [item, setItem] = useState<BentoDetail | null>(null);
@@ -97,7 +105,13 @@ export default function BentoDetailPage() {
     if (error) {
       setFeedbackMessage("삭제 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요.");
     } else {
-      router.push("/");
+      const remaining = siblings.filter((s) => s !== id);
+      if (remaining.length > 0) {
+        const target = nextId ?? prevId ?? remaining[0];
+        router.push(`/bento/${target}?siblings=${remaining.join(",")}`);
+      } else {
+        router.push("/");
+      }
     }
   };
 
@@ -112,13 +126,44 @@ export default function BentoDetailPage() {
         <div className="flex flex-col items-center flex-1">
           <div className="flex flex-col gap-6 pt-10 pb-20 px-8 w-full max-w-[800px]">
 
-            {/* 뒤로 */}
-            <Link
-              href="/"
-              className="font-sans text-[16px] font-normal leading-[1.2] tracking-[-0.64px] text-foreground"
-            >
-              ← 뒤로
-            </Link>
+            {/* 뒤로 / 이전·다음 컨트롤러 */}
+            <div className="flex items-center justify-between w-full">
+              <Link
+                href="/"
+                className="flex items-center h-10 font-sans text-[16px] font-normal leading-[1.2] tracking-[-0.64px] text-foreground"
+              >
+                ← 뒤로
+              </Link>
+
+              {hasSiblings && (
+                <div className="flex items-center gap-[10px]">
+                  {prevId ? (
+                    <Link
+                      href={`/bento/${prevId}${siblingsParam}`}
+                      className="flex items-center h-10 font-sans text-[16px] font-normal leading-[1.2] tracking-[-0.64px] text-foreground"
+                    >
+                      ← 이전
+                    </Link>
+                  ) : (
+                    <span className="flex items-center h-10 font-sans text-[16px] font-normal leading-[1.2] tracking-[-0.64px] text-[#cccccc]">
+                      ← 이전
+                    </span>
+                  )}
+                  {nextId ? (
+                    <Link
+                      href={`/bento/${nextId}${siblingsParam}`}
+                      className="flex items-center h-10 font-sans text-[16px] font-normal leading-[1.2] tracking-[-0.64px] text-foreground"
+                    >
+                      다음 →
+                    </Link>
+                  ) : (
+                    <span className="flex items-center h-10 font-sans text-[16px] font-normal leading-[1.2] tracking-[-0.64px] text-[#cccccc]">
+                      다음 →
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
 
             {/* 사진 */}
             {item.image_url && (

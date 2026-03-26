@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { BentoItem } from "@/types/bento";
 
 interface BentoCardProps {
@@ -33,6 +34,10 @@ export default function BentoCard({ item }: BentoCardProps) {
         : null;
 
   return (
+    <motion.div
+      whileTap={{ scale: 0.96 }}
+      transition={{ duration: 0.12, ease: "easeOut" }}
+    >
     <Link
       ref={ref}
       href={`/bento/${item.id}`}
@@ -71,5 +76,6 @@ export default function BentoCard({ item }: BentoCardProps) {
         </span>
       </div>
     </Link>
+    </motion.div>
   );
 }
