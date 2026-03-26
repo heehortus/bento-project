@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
 import TopNavigation from "@/components/TopNavigation";
 import Button from "@/components/Button";
 import Dialog from "@/components/Dialog";
@@ -124,7 +125,15 @@ export default function BentoDetailPage() {
       <div className="flex flex-col min-h-screen">
         <TopNavigation />
         <div className="flex flex-col items-center flex-1">
-          <div className="flex flex-col gap-6 pt-10 pb-20 px-8 w-full max-w-[800px]">
+          <AnimatePresence mode="wait">
+          <motion.div
+            key={id}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 12 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="flex flex-col gap-6 pt-10 pb-20 px-8 w-full max-w-[800px]"
+          >
 
             {/* 뒤로 / 이전·다음 컨트롤러 */}
             <div className="flex items-center justify-between w-full">
@@ -136,7 +145,7 @@ export default function BentoDetailPage() {
               </Link>
 
               {hasSiblings && (
-                <div className="flex items-center gap-[10px]">
+                <div className="flex items-center gap-[16px]">
                   {prevId ? (
                     <Link
                       href={`/bento/${prevId}${siblingsParam}`}
@@ -222,7 +231,8 @@ export default function BentoDetailPage() {
               </div>
             )}
 
-          </div>
+          </motion.div>
+          </AnimatePresence>
         </div>
       </div>
 
