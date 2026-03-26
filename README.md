@@ -1,36 +1,24 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 서비스 소개
+> 내가 먹은 도시락을 공유해보세요!
 
-## Getting Started
+## 서비스 기능
+- 다른 사람들의 도시락을 구경해요.
+- 내가 먹은 도시락을 공유해요.
+    - 사진 업로드
+    - 도시락 메뉴 기록
+    - 누구와 함께 먹었는지 기록
+    - 도시락 레시피 (선택)
+- 도시락 기록 조회
+    - 월별로 내가 기록한 도시락을 조회할 수 있어요.
 
-First, run the development server:
+## 기술 스택
+- 프론트엔드: React
+- 백엔드: Node.js
+- 데이터베이스: supabase
+- 디자인: Figma
+- 배포: Vercel
+- 버전 관리: GitHub
+- AI 에이전트 도구: Claude Code
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 서비스 URL
+- https://your-bento.vercel.app
