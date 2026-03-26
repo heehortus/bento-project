@@ -97,7 +97,7 @@ export default function ImageUploader({
             <button
               type="button"
               onClick={openFilePicker}
-              className="w-full h-full flex flex-col items-center justify-center gap-2 cursor-pointer"
+              className="w-full h-full flex flex-col items-center justify-center px-8 gap-2 cursor-pointer"
             >
               <Image
                 src={UploadIconSrc}

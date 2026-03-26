@@ -19,7 +19,7 @@ interface TextInputProps {
 
 export default function TextInput({
   label = "제목",
-  placeholder = "도시락 컨셉, 기억하고 싶은 한 줄 등 자유롭게 적어주세요.",
+  placeholder = "도시락에 대해 한 줄 소개해주세요.",
   helperText = "메시지에 마침표를 찍어요. 두 줄까지 입력할 수 있어요. 메시지에 마침표를 찍어요. 두 줄까지 입력할 수 있어요.",
   errorText = "에러 메시지를 나타내요. 에러 메시지는 한 줄까지 작성할 수 있어요.",
   required = true,

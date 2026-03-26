@@ -40,7 +40,7 @@ export default function BentoCard({ item }: BentoCardProps) {
     >
     <Link
       ref={ref}
-      href={`/bento/${item.id}`}
+      href={`/dosirak/${item.id}`}
       className="group relative aspect-[4/3] rounded-[8px] overflow-hidden bg-[#e0e0e0] block"
     >
       {/* 이미지 */}

@@ -143,9 +143,9 @@ export default function Calendar() {
                             ? () => {
                                 const firstId = record.ids[0];
                                 if (record.ids.length > 1) {
-                                  router.push(`/bento/${firstId}?siblings=${record.ids.join(",")}&from=calendar`);
+                                  router.push(`/dosirak/${firstId}?siblings=${record.ids.join(",")}&from=calendar`);
                                 } else {
-                                  router.push(`/bento/${firstId}?from=calendar`);
+                                  router.push(`/dosirak/${firstId}?from=calendar`);
                                 }
                               }
                             : undefined

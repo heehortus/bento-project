@@ -113,7 +113,7 @@ export default function BentoDetailPage() {
       const remaining = siblings.filter((s) => s !== id);
       if (remaining.length > 0) {
         const target = nextId ?? prevId ?? remaining[0];
-        router.push(`/bento/${target}?siblings=${remaining.join(",")}&from=calendar`);
+        router.push(`/dosirak/${target}?siblings=${remaining.join(",")}&from=calendar`);
       } else {
         router.push(backHref);
       }
@@ -152,7 +152,7 @@ export default function BentoDetailPage() {
                 <div className="flex items-center gap-[24px]">
                   {prevId ? (
                     <Link
-                      href={`/bento/${prevId}${siblingsParam}`}
+                      href={`/dosirak/${prevId}${siblingsParam}`}
                       className="flex items-center h-10 font-sans text-[16px] font-normal leading-[1.2] tracking-[-0.64px] text-foreground"
                     >
                       ← 이전
@@ -164,7 +164,7 @@ export default function BentoDetailPage() {
                   )}
                   {nextId ? (
                     <Link
-                      href={`/bento/${nextId}${siblingsParam}`}
+                      href={`/dosirak/${nextId}${siblingsParam}`}
                       className="flex items-center h-10 font-sans text-[16px] font-normal leading-[1.2] tracking-[-0.64px] text-foreground"
                     >
                       다음 →

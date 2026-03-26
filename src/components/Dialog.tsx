@@ -152,7 +152,7 @@ export default function Dialog({
                   {/* 제목 */}
                   <TextInput
                     label="제목"
-                    placeholder="도시락 컨셉, 기억하고 싶은 한 줄 등 자유롭게 적어주세요."
+                    placeholder="도시락에 대해 한 줄 소개해주세요."
                     required
                     maxLength={50}
                     showCounter
