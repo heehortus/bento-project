@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import CalendarHeader from "@/components/CalendarHeader";
 import CalendarDay from "@/components/CalendarDay";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/hooks/useAuth";
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -32,6 +33,7 @@ function buildGrid(year: number, month: number): (number | null)[] {
 
 export default function Calendar() {
   const router = useRouter();
+  const { user } = useAuth();
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
@@ -39,12 +41,15 @@ export default function Calendar() {
   const direction = useRef<1 | -1>(1);
 
   useEffect(() => {
+    if (!user) return;
+
     const from = new Date(year, month - 1, 1).toISOString();
     const to = new Date(year, month, 1).toISOString();
 
     supabase
       .from("bento")
       .select("id, image_url, created_at")
+      .eq("user_id", user.id)
       .gte("created_at", from)
       .lt("created_at", to)
       .then(({ data }) => {
@@ -60,7 +65,7 @@ export default function Calendar() {
         });
         setDayMap(map);
       });
-  }, [year, month]);
+  }, [year, month, user]);
 
   const handlePrev = () => {
     direction.current = -1;
