@@ -21,4 +21,4 @@
 - AI 에이전트 도구: Claude Code
 
 ## 서비스 URL
-- https://your-bento.vercel.app
+- https://your-dosirak.vercel.app
