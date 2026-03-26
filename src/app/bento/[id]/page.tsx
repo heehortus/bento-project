@@ -41,7 +41,11 @@ export default function BentoDetailPage() {
   const hasSiblings = siblings.length > 1;
   const prevId = siblingIndex > 0 ? siblings[siblingIndex - 1] : null;
   const nextId = siblingIndex < siblings.length - 1 ? siblings[siblingIndex + 1] : null;
-  const siblingsParam = hasSiblings ? `?siblings=${siblings.join(",")}` : "";
+  const fromCalendar = searchParams.get("from") === "calendar";
+  const backHref = fromCalendar ? "/calendar" : "/";
+  const siblingsParam = hasSiblings
+    ? `?siblings=${siblings.join(",")}&from=calendar`
+    : fromCalendar ? "?from=calendar" : "";
 
   const { user } = useAuth();
   const [item, setItem] = useState<BentoDetail | null>(null);
@@ -109,9 +113,9 @@ export default function BentoDetailPage() {
       const remaining = siblings.filter((s) => s !== id);
       if (remaining.length > 0) {
         const target = nextId ?? prevId ?? remaining[0];
-        router.push(`/bento/${target}?siblings=${remaining.join(",")}`);
+        router.push(`/bento/${target}?siblings=${remaining.join(",")}&from=calendar`);
       } else {
-        router.push("/");
+        router.push(backHref);
       }
     }
   };
@@ -138,14 +142,14 @@ export default function BentoDetailPage() {
             {/* 뒤로 / 이전·다음 컨트롤러 */}
             <div className="flex items-center justify-between w-full">
               <Link
-                href="/"
+                href={backHref}
                 className="flex items-center h-10 font-sans text-[16px] font-normal leading-[1.2] tracking-[-0.64px] text-foreground"
               >
                 ← 뒤로
               </Link>
 
               {hasSiblings && (
-                <div className="flex items-center gap-[16px]">
+                <div className="flex items-center gap-[24px]">
                   {prevId ? (
                     <Link
                       href={`/bento/${prevId}${siblingsParam}`}
