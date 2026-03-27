@@ -1,21 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import CalendarHeader from "@/components/CalendarHeader";
 import CalendarDay from "@/components/CalendarDay";
-import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/hooks/useAuth";
+import { DayMap } from "@/hooks/useCalendarData";
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
-
-interface BentoRecord {
-  ids: string[];
-  image_url: string | null;
-}
-
-type DayMap = Record<number, BentoRecord>;
 
 function buildGrid(year: number, month: number): (number | null)[] {
   const firstDay = new Date(year, month - 1, 1).getDay();
@@ -31,52 +23,26 @@ function buildGrid(year: number, month: number): (number | null)[] {
   return cells;
 }
 
-export default function Calendar() {
+interface CalendarProps {
+  year: number;
+  month: number;
+  dayMap: DayMap;
+  onPrev: () => void;
+  onNext: () => void;
+}
+
+export default function Calendar({ year, month, dayMap, onPrev, onNext }: CalendarProps) {
   const router = useRouter();
-  const { user } = useAuth();
-  const today = new Date();
-  const [year, setYear] = useState(today.getFullYear());
-  const [month, setMonth] = useState(today.getMonth() + 1);
-  const [dayMap, setDayMap] = useState<DayMap>({});
   const direction = useRef<1 | -1>(1);
-
-  useEffect(() => {
-    if (!user) return;
-
-    const from = new Date(year, month - 1, 1).toISOString();
-    const to = new Date(year, month, 1).toISOString();
-
-    supabase
-      .from("bento")
-      .select("id, image_url, created_at")
-      .eq("user_id", user.id)
-      .gte("created_at", from)
-      .lt("created_at", to)
-      .then(({ data }) => {
-        if (!data) return;
-        const map: DayMap = {};
-        data.forEach((row) => {
-          const day = new Date(row.created_at).getDate();
-          if (!map[day]) {
-            map[day] = { ids: [String(row.id)], image_url: row.image_url };
-          } else {
-            map[day].ids.push(String(row.id));
-          }
-        });
-        setDayMap(map);
-      });
-  }, [year, month, user]);
 
   const handlePrev = () => {
     direction.current = -1;
-    if (month === 1) { setYear((y) => y - 1); setMonth(12); }
-    else setMonth((m) => m - 1);
+    onPrev();
   };
 
   const handleNext = () => {
     direction.current = 1;
-    if (month === 12) { setYear((y) => y + 1); setMonth(1); }
-    else setMonth((m) => m + 1);
+    onNext();
   };
 
   const grid = buildGrid(year, month);

@@ -1,9 +1,10 @@
 interface ChipProps {
   label?: string;
   state?: "normal" | "pressed" | "disabled";
+  onClick?: () => void;
 }
 
-export default function Chip({ label = "혼자", state = "normal" }: ChipProps) {
+export default function Chip({ label = "혼자", state = "normal", onClick }: ChipProps) {
   const containerClass = {
     normal: "bg-white border-normal",
     pressed: "bg-positive-subtle border-positive",
@@ -18,6 +19,7 @@ export default function Chip({ label = "혼자", state = "normal" }: ChipProps) 
 
   return (
     <div
+      onClick={onClick}
       className={`border rounded-[8px] flex items-center justify-center px-4 py-2 cursor-pointer ${containerClass}`}
     >
       <span

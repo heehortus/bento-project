@@ -19,7 +19,7 @@ export default function BentoCard({ item }: BentoCardProps) {
 
     const observer = new IntersectionObserver(
       ([entry]) => setIsActive(entry.isIntersecting),
-      { threshold: 0.9 }
+      { threshold: 0.99 }
     );
 
     if (ref.current) observer.observe(ref.current);
