@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import TopNavigation from "@/components/TopNavigation";
@@ -12,6 +13,8 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import { useBentoCreate } from "@/hooks/useBentoCreate";
 import { useLike } from "@/hooks/useLike";
+import HeartIconSrc from "@/asset/image/Icon/Heart.svg";
+import HeartFilIconSrc from "@/asset/image/Icon/HeartFil.svg";
 
 interface BentoDetail {
   id: string;
@@ -235,20 +238,25 @@ export default function BentoDetailPage() {
                   onClick={toggleLike}
                   disabled={isLikePending}
                   aria-label={isLiked ? "좋아요 취소" : "좋아요"}
-                  className="flex items-center justify-center w-10 h-10 -ml-1 transition-transform active:scale-90 disabled:opacity-50 cursor-pointer"
+                  className="relative flex items-center justify-center w-10 h-10 disabled:opacity-50 cursor-pointer"
                 >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill={isLiked ? "#7fffd4" : "none"}
-                    stroke={isLiked ? "#7fffd4" : "#999999"}
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                  </svg>
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.div
+                      key={isLiked ? "filled" : "empty"}
+                      initial={{ scale: 0.6, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.6, opacity: 0 }}
+                      transition={{ duration: 0.15, ease: "easeOut" }}
+                    >
+                      <Image
+                        src={isLiked ? HeartFilIconSrc : HeartIconSrc}
+                        alt=""
+                        aria-hidden="true"
+                        width={24}
+                        height={24}
+                      />
+                    </motion.div>
+                  </AnimatePresence>
                 </button>
               </div>
 
