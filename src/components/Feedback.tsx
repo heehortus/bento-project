@@ -49,7 +49,7 @@ export default function Feedback({
               <p className="font-sans text-[20px] font-bold leading-[20px] tracking-[0.08px] text-foreground w-full">
                 {title}
               </p>
-              <p className="font-sans text-[16px] font-medium leading-[20px] tracking-[-0.32px] text-normal w-full">
+              <p className="font-sans text-[16px] font-medium leading-[20px] tracking-[-0.32px] text-normal w-full pr-2">
                 {message}
               </p>
               {variant === "single" ? (

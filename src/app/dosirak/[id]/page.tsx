@@ -10,6 +10,7 @@ import Dialog from "@/components/Dialog";
 import Feedback from "@/components/Feedback";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
+import { useBentoCreate } from "@/hooks/useBentoCreate";
 
 interface BentoDetail {
   id: string;
@@ -48,6 +49,7 @@ export default function BentoDetailPage() {
     : fromCalendar ? "?from=calendar" : "";
 
   const { user } = useAuth();
+  const handleBentoSubmit = useBentoCreate();
   const [item, setItem] = useState<BentoDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -127,7 +129,7 @@ export default function BentoDetailPage() {
   return (
     <>
       <div className="flex flex-col min-h-screen">
-        <TopNavigation />
+        <TopNavigation onBentoSubmit={handleBentoSubmit} />
         <div className="flex flex-col items-center flex-1">
           <AnimatePresence mode="wait">
           <motion.div
